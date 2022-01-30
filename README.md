@@ -5,4 +5,4 @@ One other goal is to be able to visualise the points of every user over the time
 
 The PAD will be used during parties where each participant will be able to gain and lose points with some games.
 
-This project is also a way to discover django.
+This project is also a way to discover django following the tutorial : [django tutorial](https://docs.djangoproject.com/fr/4.0/intro/tutorial01/)
