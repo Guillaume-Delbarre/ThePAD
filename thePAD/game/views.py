@@ -22,7 +22,6 @@ def points(request, user_id):
 def attribute(request, user_id):
     user = get_object_or_404(User, pk=user_id)
     try :
-        print('lapin', request.POST['date'], request.POST['date'] == "")
         if request.POST['date'] == "" :
             action = Action(user = user, point = request.POST['point'])
         else :
@@ -30,7 +29,7 @@ def attribute(request, user_id):
     except (KeyError, User.DoesNotExist) :
         return render(request, 'game/detail.html', {
             'user': user,
-            'error_message': "Les entrées de l'action ne sont pas valides",
+            'error_message': "Les entrées ne sont pas valides",
         })
     else :
         action.save()
