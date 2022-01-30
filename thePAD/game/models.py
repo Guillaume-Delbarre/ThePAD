@@ -13,7 +13,7 @@ class User(models.Model):
 class Action(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     point = models.IntegerField()
-    act_date = models.TimeField('action date', default=timezone.now())
+    act_date = models.DateTimeField('action date', default=timezone.now())
 
     def __str__(self):
         return str(self.user) + ' : ' + str(self.point)

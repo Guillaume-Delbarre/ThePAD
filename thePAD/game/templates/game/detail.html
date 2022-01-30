@@ -4,11 +4,17 @@
     <meta charset="utf-8">
   </head>
   <body>
-    <h1>{{ user.name }}</h1>
-    <ul>
-    {% for action in user.action_set.all %}
-        <li>{{ action.point }}</li>
-    {% endfor %}
-    </ul>
+    <form action="{% url 'game:attribute' user.id %}" method="post">
+      {% csrf_token %}
+      <fieldset>
+          <legend><h1>{{ user.name }} : {{ user.get_total_point }}</h1></legend>
+          {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+          <label for="pointInput">Nombre de points</label>
+          <input type="number" name="point" id="pointInput" required>
+          <label for="dateInput">Date de l'ajout</label>
+          <input type="datetime-local" name="date" id="dateInput">
+        <input type="submit" value="Add">
+      </fieldset>
+    </form>
   </body>
 </html>
