@@ -1,19 +1,17 @@
 from django.http import HttpResponse
-from django.template import loader
+from django.shortcuts import get_object_or_404, render
 
 from .models import User
 
 
 def index(request):
     user_list = User.objects.all()
-    template = loader.get_template('game/index.html')
-    context = {
-        'user_list': user_list,
-    }
-    return HttpResponse(template.render(context, request))
+    context = {'user_list': user_list}
+    return render(request, 'game/index.html', context)
 
 def detail(request, user_id):
-    return HttpResponse("You're looking at user %s." % user_id)
+    user = get_object_or_404(User, pk=user_id)
+    return render(request, 'game/detail.html', {'user': user})
 
 def points(request, user_id):
     return HttpResponse("You're looking at the points of user %s." % user_id)
