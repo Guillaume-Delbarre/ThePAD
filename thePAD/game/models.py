@@ -4,6 +4,7 @@ from django.utils import timezone
 
 class User(models.Model):
     name = models.CharField(max_length=50)
+    total_points = models.Count
 
     def __str__(self):
         return self.name

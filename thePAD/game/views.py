@@ -2,6 +2,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
+from django.db.models import Count
 
 from .models import Action, User
 
@@ -11,7 +12,7 @@ class IndexView(generic.ListView) :
     context_object_name = 'user_list'
 
     def get_queryset(self) :
-        return User.objects.order_by('name')
+        return User.objects.annotate(count=Count('action__point')).order_by('-count')
 
 class DetailView(generic.DetailView) :
     model = User
