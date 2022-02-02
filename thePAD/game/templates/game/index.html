@@ -7,11 +7,25 @@
     {% if user_list %}
     <ul>
     {% for user in user_list %}
-        <li><a href="{% url 'game:detail' user.id %}">{{ user.name }} : {{ user.get_total_point }}</a></li>
+        <li><a href="{% url 'game:detail' user.id %}">{{ user.name }} : {{ user.get_total_point }} ({{ user.id }})</a></li>
     {% endfor %}
     </ul>
     {% else %}
         <p>No user are available.</p>
     {% endif %}
+
+    <form action="{% url 'game:create_user' %}" method="post">
+      {% csrf_token %}
+      <p>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+      </p>
+      <p>
+        <label for="nameInput">Nom de l'utilisateur</label>
+        <input type="text" name="nom" id="nameInput" required>
+      </p>
+      <p>
+        <input type="submit" value="Ajouter un nouvel utilisateur">
+      </p>
+    </form>
   </body>
 </html>

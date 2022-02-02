@@ -17,5 +17,9 @@
       </fieldset>
     </form>
     <a href="{% url 'game:index' %}">Menu</a>
+    <form action="{% url 'game:delete' user.id %}" method="post">
+      {% csrf_token %}
+      <input type="submit" value="Delete User">
+    </form>
   </body>
 </html>

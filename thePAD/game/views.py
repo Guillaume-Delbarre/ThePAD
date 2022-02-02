@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
@@ -11,7 +11,7 @@ class IndexView(generic.ListView) :
     context_object_name = 'user_list'
 
     def get_queryset(self) :
-        return User.objects.all()
+        return User.objects.order_by('name')
 
 class DetailView(generic.DetailView) :
     model = User
@@ -20,19 +20,6 @@ class DetailView(generic.DetailView) :
 class PointView(generic.DetailView) :
     model = User
     template_name = 'game/points.html'
-        
-# def index(request):
-#     user_list = User.objects.all()
-#     context = {'user_list': user_list}
-#     return render(request, 'game/index.html', context)
-
-# def detail(request, user_id):
-#     user = get_object_or_404(User, pk=user_id)
-#     return render(request, 'game/detail.html', {'user': user})
-
-# def points(request, user_id):
-#     user = get_object_or_404(User, pk=user_id)
-#     return render(request, 'game/points.html', {'user': user})
 
 def attribute(request, user_id):
     user = get_object_or_404(User, pk=user_id)
@@ -49,3 +36,21 @@ def attribute(request, user_id):
     else :
         action.save()
         return HttpResponseRedirect(reverse('game:points', args=(user.id,)))
+
+def delete(request, user_id) :
+    user = get_object_or_404(User, user_id)
+    #user = User.objects.get(pk=user_id)
+    user.delete()
+    return HttpResponseRedirect(reverse('game:index'))
+
+def create_user(request) :
+    try :
+        name = request.POST["nom"]
+    except (KeyError) :
+        return render(request, 'game/index.html', {
+            'error_message': 'Les entrées ne sont pas valides'
+        })
+    else :
+        user = User(name=name)
+        user.save()
+        return HttpResponseRedirect(reverse('game:detail', args=(user.id,)))
