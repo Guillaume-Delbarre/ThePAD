@@ -4,7 +4,7 @@
     <meta charset="utf-8">
 
     {% load static %}
-
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
     <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
   </head>
   <body>
@@ -31,5 +31,7 @@
         <input type="submit" value="Ajouter un nouvel utilisateur">
       </p>
     </form>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
   </body>
 </html>
