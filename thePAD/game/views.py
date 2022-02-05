@@ -55,3 +55,7 @@ def create_user(request) :
         user = User(name=name)
         user.save()
         return HttpResponseRedirect(reverse('game:detail', args=(user.id,)))
+
+def best(request) :
+    user = User.objects.annotate(count=Count('action__point')).order_by('-count').first()
+    return HttpResponseRedirect(reverse('game:points', args=(user.id,)))

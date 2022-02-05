@@ -1,25 +1,21 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-  </head>
-  <body>
-    <form action="{% url 'game:attribute' user.id %}" method="post">
-      {% csrf_token %}
-      <fieldset>
-          <legend><h1>{{ user.name }} : {{ user.get_total_point }}</h1></legend>
-          {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-          <label for="pointInput">Nombre de points</label>
-          <input type="number" name="point" id="pointInput" required>
-          <label for="dateInput">Date de l'ajout</label>
-          <input type="datetime-local" name="date" id="dateInput">
-        <input type="submit" value="Add">
-      </fieldset>
-    </form>
-    <a href="{% url 'game:index' %}">Menu</a>
-    <form action="{% url 'game:delete' user.id %}" method="post">
-      {% csrf_token %}
-      <input type="submit" value="Delete User">
-    </form>
-  </body>
-</html>
+{% extends 'game/base.html' %}
+
+{% block content %}
+  <form action="{% url 'game:attribute' user.id %}" method="post">
+    {% csrf_token %}
+    <fieldset>
+        <legend><h1>{{ user.name }} : {{ user.get_total_point }}</h1></legend>
+        {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <label for="pointInput">Nombre de points</label>
+        <input type="number" name="point" id="pointInput" required>
+        <label for="dateInput">Date de l'ajout</label>
+        <input type="datetime-local" name="date" id="dateInput">
+      <input type="submit" value="Add">
+    </fieldset>
+  </form>
+  <a href="{% url 'game:index' %}">Menu</a>
+  <form action="{% url 'game:delete' user.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" value="Delete User">
+  </form>
+{% endblock %}
