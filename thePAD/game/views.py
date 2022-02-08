@@ -39,7 +39,7 @@ def attribute(request, player_id):
         return HttpResponseRedirect(reverse('game:points', args=(player.id,)))
 
 def delete(request, player_id) :
-    player = get_object_or_404(Player, player_id)
+    player = get_object_or_404(Player, pk=player_id)
     #player = Player.objects.get(pk=player_id)
     player.delete()
     return HttpResponseRedirect(reverse('game:index'))
@@ -47,12 +47,14 @@ def delete(request, player_id) :
 def create_player(request) :
     try :
         name = request.POST["nom"]
+        photo = request.POST["photo"]
+        description = request.POST["description"]
     except (KeyError) :
         return render(request, 'game/index.html', {
             'error_message': 'Les entrées ne sont pas valides'
         })
     else :
-        player = Player(name=name)
+        player = Player(name=name, photo=photo, description=description)
         player.save()
         return HttpResponseRedirect(reverse('game:detail', args=(player.id,)))
 
