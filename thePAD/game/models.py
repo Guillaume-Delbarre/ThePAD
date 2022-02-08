@@ -5,7 +5,7 @@ from django.utils import timezone
 
 class Player(models.Model):
     name = models.CharField(max_length=50)
-    photo = models.ImageField(upload_to='photo_de_profile')
+    photo = models.ImageField(upload_to='photo_de_profile', null=True)
     description = models.CharField(max_length=200, null=True)
 
     def __str__(self):
