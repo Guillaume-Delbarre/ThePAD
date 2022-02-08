@@ -10,5 +10,6 @@ urlpatterns = [
     path('<int:pk>/points/', views.PointView.as_view(), name='points'),
     path('<int:player_id>/attribute/', views.attribute, name = 'attribute'),
     path('<int:player_id>/delete', views.delete, name='delete'),
-    path('create/', views.create_player, name='create_player')
+    path('create/', views.create_player, name='create_player'),
+    path('add_player', views.add_player, name="add-player")
 ]

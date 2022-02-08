@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.db.models import Count
-
+from .forms import PlayerForm
 from .models import Action, Player
 
 
@@ -57,6 +57,20 @@ def create_player(request) :
         player = Player(name=name, photo=photo, description=description)
         player.save()
         return HttpResponseRedirect(reverse('game:detail', args=(player.id,)))
+
+def add_player(request) :
+    submitted = False
+    if request.method == "POST" :
+        form = PlayerForm(request.POST, request.FILES)
+        if form.is_valid() :
+            form.save()
+            return HttpResponseRedirect('/add_player?submitted=True')
+    else :
+        form = PlayerForm
+        if 'submitted' in request.GET :
+            submitted = True
+        
+    return render(request, 'game/add_player.html', {'form':form, 'submitted':submitted})
 
 def best(request) :
     player = Player.objects.annotate(count=Count('action__point')).order_by('-count').first()
