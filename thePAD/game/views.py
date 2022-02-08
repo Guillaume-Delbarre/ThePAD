@@ -4,47 +4,47 @@ from django.urls import reverse
 from django.views import generic
 from django.db.models import Count
 
-from .models import Action, User
+from .models import Action, Player
 
 
 class IndexView(generic.ListView) :
     template_name = 'game/index.html'
-    context_object_name = 'user_list'
+    context_object_name = 'player_list'
 
     def get_queryset(self) :
-        return User.objects.annotate(count=Count('action__point')).order_by('-count')
+        return Player.objects.annotate(count=Count('action__point')).order_by('-count')
 
 class DetailView(generic.DetailView) :
-    model = User
+    model = Player
     template_name = 'game/detail.html'
 
 class PointView(generic.DetailView) :
-    model = User
+    model = Player
     template_name = 'game/points.html'
 
-def attribute(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def attribute(request, player_id):
+    player = get_object_or_404(Player, pk=player_id)
     try :
         if request.POST['date'] == "" :
-            action = Action(user = user, point = request.POST['point'])
+            action = Action(player = player, point = request.POST['point'])
         else :
-            action = Action(user = user, point = request.POST['point'], act_date = request.POST['date'])
-    except (KeyError, User.DoesNotExist) :
+            action = Action(player = player, point = request.POST['point'], act_date = request.POST['date'])
+    except (KeyError, Player.DoesNotExist) :
         return render(request, 'game/detail.html', {
-            'user': user,
+            'player': player,
             'error_message': "Les entrées ne sont pas valides",
         })
     else :
         action.save()
-        return HttpResponseRedirect(reverse('game:points', args=(user.id,)))
+        return HttpResponseRedirect(reverse('game:points', args=(player.id,)))
 
-def delete(request, user_id) :
-    user = get_object_or_404(User, user_id)
-    #user = User.objects.get(pk=user_id)
-    user.delete()
+def delete(request, player_id) :
+    player = get_object_or_404(Player, player_id)
+    #player = Player.objects.get(pk=player_id)
+    player.delete()
     return HttpResponseRedirect(reverse('game:index'))
 
-def create_user(request) :
+def create_player(request) :
     try :
         name = request.POST["nom"]
     except (KeyError) :
@@ -52,10 +52,10 @@ def create_user(request) :
             'error_message': 'Les entrées ne sont pas valides'
         })
     else :
-        user = User(name=name)
-        user.save()
-        return HttpResponseRedirect(reverse('game:detail', args=(user.id,)))
+        player = Player(name=name)
+        player.save()
+        return HttpResponseRedirect(reverse('game:detail', args=(player.id,)))
 
 def best(request) :
-    user = User.objects.annotate(count=Count('action__point')).order_by('-count').first()
-    return HttpResponseRedirect(reverse('game:points', args=(user.id,)))
+    player = Player.objects.annotate(count=Count('action__point')).order_by('-count').first()
+    return HttpResponseRedirect(reverse('game:points', args=(player.id,)))

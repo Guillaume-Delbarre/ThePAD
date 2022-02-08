@@ -1,10 +1,10 @@
 {% extends 'game/base.html' %}
 
 {% block content %}
-  <form action="{% url 'game:attribute' user.id %}" method="post">
+  <form action="{% url 'game:attribute' player.id %}" method="post">
     {% csrf_token %}
     <fieldset>
-        <legend><h1>{{ user.name }} : {{ user.get_total_point }}</h1></legend>
+        <legend><h1>{{ player.name }} : {{ player.get_total_point }}</h1></legend>
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
         <label for="pointInput">Nombre de points</label>
         <input type="number" name="point" id="pointInput" required>
@@ -13,9 +13,8 @@
       <input type="submit" value="Add">
     </fieldset>
   </form>
-  <a href="{% url 'game:index' %}">Menu</a>
-  <form action="{% url 'game:delete' user.id %}" method="post">
+  <form action="{% url 'game:delete' player.id %}" method="post">
     {% csrf_token %}
-    <input type="submit" value="Delete User">
+    <input type="submit" value="Delete Player">
   </form>
 {% endblock %}

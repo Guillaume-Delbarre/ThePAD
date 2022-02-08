@@ -1,18 +1,18 @@
 {% extends 'game/base.html' %}
 
 {% block content %}
-  {% if user %}
-  <h1>{{ user.name }} : {{ user.get_total_point }}</h1>
+  {% if player %}
+  <h1>{{ player.name }} : {{ player.get_total_point }}</h1>
   <ul>
-  {% for action in user.action_set.all %}
-      <!-- <li><a href="{% url 'game:detail' user.id %}">{{ user.name }}</a></li> -->
+  {% for action in player.action_set.all %}
+      <!-- <li><a href="{% url 'game:detail' player.id %}">{{ player.name }}</a></li> -->
       <li>{{ action.point }}</li>
   {% endfor %}
   </ul>
-  <a href="{% url 'game:detail' user.id %}">Ajouter une nouvelle action</a>
+  <a href="{% url 'game:detail' player.id %}">Ajouter une nouvelle action</a>
   <a href="{% url 'game:index' %}">Menu</a>
   {% else %}
-      <p>L'utilisateur n'a pas été trouvé</p>
-      <a href="{% url 'game:detail' user.id %}">Retour</a>
+      <p>Le joueur n'a pas été trouvé</p>
+      <a href="{% url 'game:detail' player.id %}">Retour</a>
   {% endif %}
 {% endblock %}

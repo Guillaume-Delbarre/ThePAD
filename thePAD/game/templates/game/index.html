@@ -1,17 +1,17 @@
 {% extends 'game/base.html' %}
 
 {% block content %}
-  {% if user_list %}
+  {% if player_list %}
   <ul>
-  {% for user in user_list %}
-      <li><a href="{% url 'game:detail' user.id %}">{{ user.name }} : {{ user.get_total_point }} ({{ user.id }})</a></li>
+  {% for player in player_list %}
+      <li><a href="{% url 'game:detail' player.id %}">{{ player.name }} : {{ player.get_total_point }} ({{ player.id }})</a></li>
   {% endfor %}
   </ul>
   {% else %}
-      <p>No user are available.</p>
+      <p>No player are available.</p>
   {% endif %}
 
-  <form action="{% url 'game:create_user' %}" method="post">
+  <form action="{% url 'game:create_player' %}" method="post">
     {% csrf_token %}
     <p>
       {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
