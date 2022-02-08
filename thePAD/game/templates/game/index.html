@@ -2,11 +2,26 @@
 
 {% block content %}
   {% if player_list %}
-  <ul>
-  {% for player in player_list %}
-      <li><a href="{% url 'game:detail' player.id %}">{{ player.name }} : {{ player.get_total_point }} ({{ player.id }})</a></li>
-  {% endfor %}
-  </ul>
+  <table class="table table-striped table-bordered table-hover">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Nom</th>
+        <th scope="col">Nombre de Points</th>
+        <th scope="col">Description</th>
+        <th scope="col">Voir</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for player in player_list %}
+        <tr>
+          <td>{{ player.name }}</td>
+          <td>{{ player.get_total_point }}</td>
+          <td>{{ player.description }}</td>
+          <td><form action="{% url 'game:detail' player.id%}"><input type="submit" class="btn btn-primary" value="Voir le joueur"></form></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   {% else %}
       <p>No player are available.</p>
   {% endif %}
