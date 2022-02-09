@@ -1,0 +1,24 @@
+{% extends 'game/base.html' %}
+
+{% block content %}
+
+    <h1>Ajouter une action</h1>
+    <br/>
+
+    {% if submitted %}
+        L'action à bien été ajouté
+
+    {% else %}
+
+    <form action="" method=POST enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <input type="submit" value="Envoyer" class="btn btn-primary">
+
+    </form>
+
+    {% endif %}
+
+{% endblock %}

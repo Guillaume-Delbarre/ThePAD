@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.db.models import Count
-from .forms import PlayerForm
+from .forms import PlayerForm, ActionForm
 from .models import Action, Player
 
 
@@ -44,20 +44,6 @@ def delete(request, player_id) :
     player.delete()
     return HttpResponseRedirect(reverse('game:index'))
 
-def create_player(request) :
-    try :
-        name = request.POST["nom"]
-        photo = request.POST["photo"]
-        description = request.POST["description"]
-    except (KeyError) :
-        return render(request, 'game/index.html', {
-            'error_message': 'Les entrées ne sont pas valides'
-        })
-    else :
-        player = Player(name=name, photo=photo, description=description)
-        player.save()
-        return HttpResponseRedirect(reverse('game:detail', args=(player.id,)))
-
 def add_player(request) :
     submitted = False
     if request.method == "POST" :
@@ -71,6 +57,21 @@ def add_player(request) :
             submitted = True
         
     return render(request, 'game/add_player.html', {'form':form, 'submitted':submitted})
+
+def add_action(request) :
+    submitted = False
+    if request.method == "POST" :
+        form = ActionForm(request.POST, request.FILES)
+        if form.is_valid() :
+            form.save()
+            return HttpResponseRedirect('/add_action?submitted=True')
+    else :
+        form = ActionForm
+        if 'submitted' in request.GET :
+            submitted = True
+        
+    return render(request, 'game/add_action.html', {'form':form, 'submitted':submitted})
+
 
 def best(request) :
     player = Player.objects.annotate(count=Count('action__point')).order_by('-count').first()

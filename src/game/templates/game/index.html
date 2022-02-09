@@ -25,26 +25,4 @@
   {% else %}
       <p>No player are available.</p>
   {% endif %}
-
-  <form action="{% url 'game:create_player' %}" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <p>
-      {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    </p>
-    <p>
-      <label for="nameInput">Nom de l'utilisateur</label>
-      <input type="text" name="nom" id="nameInput" required>
-    </p>
-    <p>
-      <label for="imageInput">Photo de Profile</label>
-      <input type="file" name="photo" id="imageInput">
-    </p>
-    <p>
-      <label for="descriptionInput">Description :</label>
-      <input type="text" name="description" id="descriptionInput">
-    </p>
-    <p>
-      <input type="submit" value="Ajouter un nouvel utilisateur">
-    </p>
-  </form>
 {% endblock %}
