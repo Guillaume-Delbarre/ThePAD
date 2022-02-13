@@ -1,0 +1,22 @@
+{% extends 'game/base.html' %}
+
+{% block content %}
+
+{% if form.errors %}
+
+    <p>Une erreur à eue lieu lors de l'enregistrement</p>
+
+{% endif %}
+    <h1>Register</h1>
+    <br/>
+
+    <form action="" method="POST">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <br/>
+        <input type="submit" value="Register" class="btn btn-primary">
+    </form>
+
+{% endblock %}
