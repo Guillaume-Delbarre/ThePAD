@@ -2,26 +2,34 @@
 
 {% block content %}
   {% if player_list %}
-  <table class="table table-striped table-bordered table-hover">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Nom</th>
-        <th scope="col">Nombre de Points</th>
-        <th scope="col">Description</th>
-        <th scope="col">Voir</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for player in player_list %}
-        <tr>
-          <td>{{ player.name }}</td>
-          <td>{{ player.get_total_point }}</td>
-          <td>{{ player.description }}</td>
-          <td><form action="{% url 'game:detail' player.id%}"><input type="submit" class="btn btn-primary" value="Voir le joueur"></form></td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+  <div class="row">
+    {% for player in player_list %}
+      <div class="col mb-4 col-12 col-md-6 col-lg-3">
+        <div class="card card-hover">
+          <div class="card-header">
+            <h5 class="card-title">{{ player.name }}</h5>
+          </div>
+          <div class="card-body">
+            <div class="row g-0">
+              <div class="col-md-8">
+                <h5 class="card-text">{{ player.get_total_point }} points</h5>
+                <p class="card-text">{{ player.description }}</p>
+              </div>
+              {% if player.photo %}
+              <div class="col-md-4">
+                <img class="img-fluid rounded-start" src="{{ player.photo.url }}" alt="Photo de profil">
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="card-footer">
+            <a href="{% url 'game:detail' player.id %}" class="btn btn-primary">Voir le joueur</a>
+          </div>
+        </div>
+      </div>
+    {% endfor%}
+  </div>
+  
   {% else %}
       <p>No player are available.</p>
   {% endif %}
