@@ -14,7 +14,9 @@
     </fieldset>
   </form>
   <h1>Description : {{ player.description }}</h1>
-  <img class="profile-pic" src="{{ player.photo.url }}" style="width: 100%; max-width: 100px;">
+  {% if player.photo %}
+  <img class="profile-pic" src="{{ player.photo.url }}" style="width: 100%; max-width: 300px;">
+  {% endif %}
   <form action="{% url 'game:delete' player.id %}" method="post">
     {% csrf_token %}
     <input type="submit" value="Delete Player">
