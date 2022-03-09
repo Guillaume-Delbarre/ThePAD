@@ -2,23 +2,30 @@
 
 {% block content %}
 
-    <h1>Ajouter une action</h1>
-    <br/>
+    {% if user.is_authenticated %}
 
-    {% if submitted %}
-        L'action à bien été ajouté
+        <h1>Ajouter une action</h1>
+        <br/>
 
+        {% if submitted %}
+            L'action à bien été ajouté
+
+        {% else %}
+
+        <form action="" method=POST enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {{ form.as_p }}
+
+            <input type="submit" value="Envoyer" class="btn btn-primary">
+
+        </form>
+
+        {% endif %}
+    
     {% else %}
-
-    <form action="" method=POST enctype="multipart/form-data">
-        {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <input type="submit" value="Envoyer" class="btn btn-primary">
-
-    </form>
-
+        <h1>Vous devez être connecté pour ajouter une action</h1>
+        <a href="{% url 'login' %}" class="btn btn-success">Se Connecter</a>
     {% endif %}
 
 {% endblock %}
