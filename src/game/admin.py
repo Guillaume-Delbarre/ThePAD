@@ -7,7 +7,7 @@ class ActionInline(admin.StackedInline) :
     extra = 1
 
 class PlayerAdmin(admin.ModelAdmin) :
-    fields = ['name', 'description', 'photo']
+    fields = ['user', 'name', 'description', 'photo']
     inlines = [ActionInline]
 
 class ActionAdmin(admin.ModelAdmin):

@@ -14,8 +14,9 @@
 
     <form action="" method="POST">
         {% csrf_token %}
-
-        {{ form.as_p }}
+        
+        {{ register_form.as_p }}
+        {{ player_form.as_p }}
 
         <br/>
         <input type="submit" value="Register" class="btn btn-primary">

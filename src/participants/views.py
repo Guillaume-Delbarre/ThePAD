@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from django.contrib.auth.forms import UserCreationForm
 from .forms import RegisterUserForm
+from game.forms import PlayerForm
 
 def login_user(request) :
     if request.method == "POST" :
@@ -24,17 +24,26 @@ def logout_user(request) :
 
 def register_user(request) :
     if request.method == "POST" :
-        form = RegisterUserForm(request.POST)
-        if form.is_valid() :
-            form.save()
-            username = form.changed_data['username']
-            password = form.cleaned_data['password1']
+        register_form = RegisterUserForm(request.POST)
+        player_form = PlayerForm(request.POST)
+        if all((register_form.is_valid(), player_form.is_valid())):
+            user_created = register_form.save()
+            player = player_form.save(commit=False)
+            player.user = user_created
+            player.save()
+
+            print(register_form.changed_data)
+            print(register_form.fields)
+
+            username = register_form.clean().get('username')
+            password = register_form.clean().get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ("Registration duccessful"))
             return redirect('game:index')
     
     else :
-        form = RegisterUserForm()
+        register_form = RegisterUserForm()
+        player_form = PlayerForm()
 
-    return render(request, 'authenticate/register_user.html', {'form': form})
+    return render(request, 'authenticate/register_user.html', {'register_form': register_form, 'player_form': player_form})

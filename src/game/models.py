@@ -1,12 +1,13 @@
-from distutils.command.upload import upload
 from django.db import models
-from django.http import HttpResponse
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 class Player(models.Model):
     name = models.CharField(max_length=50)
     photo = models.ImageField(upload_to='photo_de_profile/', null=True, blank=True)
     description = models.CharField(max_length=200, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+
 
     def __str__(self):
         return self.name
