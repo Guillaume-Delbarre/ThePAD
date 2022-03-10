@@ -13,32 +13,27 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'game:best' %}">Best</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'game:add_player' %}">Ajouter un joueur</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'game:add_action' %}">Ajouter une Action</a>
             </li>
-
-            {% if user.is_authenticated %}
+        </ul>
+        <ul class="navbar-nav d-flex">
+          {% if user.is_authenticated %}
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'logout' %}">Logout</a>
+                <a class="nav-link btn btn-outline-danger" aria-current="page" href="{% url 'logout' %}">Déconnection</a>
               </li>
             {% else %}
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'login' %}">Login</a>
+              <li class="nav-link">
+                <a class="btn btn-outline-success" aria-current="page" href="{% url 'login' %}">Connection</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'register' %}">Register</a>
+              <li class="nav-link">
+                <a class="btn btn-outline-success" aria-current="page" href="{% url 'register' %}">Créer un joueur</a>
               </li>
             {% endif %}
         </ul>
-        <form class="d-flex">
+        <!-- <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success" type="submit">Search</button>
-        </form>
+        </form> -->
       </div>
     </div>
   </nav>

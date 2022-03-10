@@ -44,20 +44,6 @@ def delete(request, player_id) :
     player.delete()
     return HttpResponseRedirect(reverse('game:index'))
 
-def add_player(request) :
-    submitted = False
-    if request.method == "POST" :
-        form = PlayerForm(request.POST, request.FILES)
-        if form.is_valid() :
-            form.save()
-            return HttpResponseRedirect('/add_player?submitted=True')
-    else :
-        form = PlayerForm
-        if 'submitted' in request.GET :
-            submitted = True
-        
-    return render(request, 'game/add_player.html', {'form':form, 'submitted':submitted})
-
 def add_action(request) :
     submitted = False
     if request.method == "POST" :
@@ -71,8 +57,3 @@ def add_action(request) :
             submitted = True
         
     return render(request, 'game/add_action.html', {'form':form, 'submitted':submitted})
-
-
-def best(request) :
-    player = Player.objects.annotate(count=Count('action__point')).order_by('-count').first()
-    return HttpResponseRedirect(reverse('game:points', args=(player.id,)))
