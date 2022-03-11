@@ -2,10 +2,10 @@
 
 {% block content %}
   {% if player %}
-  <h1>{{ player.name }} : {{ player.get_total_point }}</h1>
+  <h1>{{ player.user.username }} : {{ player.get_total_point }}</h1>
   <ul>
   {% for action in player.action_set.all %}
-      <!-- <li><a href="{% url 'game:detail' player.id %}">{{ player.name }}</a></li> -->
+      <!-- <li><a href="{% url 'game:detail' player.id %}">{{ player.user.username }}</a></li> -->
       <li>{{ action.point }}</li>
   {% endfor %}
   </ul>

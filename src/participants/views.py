@@ -39,7 +39,7 @@ def register_user(request) :
             password = register_form.clean().get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
-            messages.success(request, ("Registration duccessful"))
+            messages.success(request, ("Bienvenue dans le jeux : " + username + " !"))
             return redirect('game:index')
     
     else :
