@@ -24,16 +24,14 @@ def logout_user(request) :
 
 def register_user(request) :
     if request.method == "POST" :
+        print(request.POST)
         register_form = RegisterUserForm(request.POST)
-        player_form = PlayerForm(request.POST)
+        player_form = PlayerForm(request.POST, request.FILES)
         if all((register_form.is_valid(), player_form.is_valid())):
             user_created = register_form.save()
             player = player_form.save(commit=False)
             player.user = user_created
             player.save()
-
-            print(register_form.changed_data)
-            print(register_form.fields)
 
             username = register_form.clean().get('username')
             password = register_form.clean().get('password1')

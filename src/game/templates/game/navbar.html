@@ -18,17 +18,18 @@
         </ul>
         <ul class="navbar-nav d-flex">
           {% if user.is_authenticated %}
-              <li class="nav-item">
-                <a class="nav-link btn btn-outline-danger" aria-current="page" href="{% url 'logout' %}">Déconnection</a>
-              </li>
-            {% else %}
-              <li class="nav-link">
-                <a class="btn btn-outline-success" aria-current="page" href="{% url 'login' %}">Connection</a>
-              </li>
-              <li class="nav-link">
-                <a class="btn btn-outline-success" aria-current="page" href="{% url 'register' %}">Créer un joueur</a>
-              </li>
-            {% endif %}
+
+            <li class="nav-item">
+              <a class="nav-link btn btn-outline-danger" aria-current="page" href="{% url 'logout' %}">Déconnection</a>
+            </li>
+          {% else %}
+            <li class="nav-link">
+              <a class="btn btn-outline-success" aria-current="page" href="{% url 'login' %}">Connection</a>
+            </li>
+            <li class="nav-link">
+              <a class="btn btn-outline-success" aria-current="page" href="{% url 'register' %}">Créer un joueur</a>
+            </li>
+          {% endif %}
         </ul>
         <!-- <form class="d-flex">
             <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
