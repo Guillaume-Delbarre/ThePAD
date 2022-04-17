@@ -22,6 +22,15 @@ class PointView(generic.DetailView) :
     model = Player
     template_name = 'game/points.html'
 
+def detail(request, player_id) :
+    player = get_object_or_404(Player, pk=player_id)
+    modify = False
+    if request.method == "GET" :
+        if 'modify' in request.GET :
+            modify = True
+    return render(request, 'game/detail.html', {'player' : player, 'modify' : modify})
+
+
 def attribute(request, player_id):
     player = get_object_or_404(Player, pk=player_id)
     try :

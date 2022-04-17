@@ -1,7 +1,36 @@
 {% extends 'game/base.html' %}
 
 {% block content %}
-  <form action="{% url 'game:attribute' player.id %}" method="post">
+  <legend><h1>{{ player.user.username }} : {{ player.get_total_point }}</h1></legend>
+  <div class="row">
+    <div class="col mb-4 col-12 col-sm-6 col-md-4 col-lg-3">
+      <!-- Partie paramètre du joueur -->
+      <div class="rounded border border-3 align-middle">
+        {% if modify %}
+          <a class="btn btn-primary" href="{% url 'game:detail' player.id %}">Modifier</a>
+        {% else %}
+          <a class="btn btn-primary" href="{% url 'game:detail' player.id %}?modify">Modifier</a>
+        {% endif %}
+        {% if player.photo %}
+          <img class="img-fluid" src="{{ player.photo.url }}" style="width: 100%; max-width: 300px;">
+          {% if modify == True %}
+          <div class="input-group mb-3">
+            <input type="file" class="form-control" accept="image/*">
+          </div>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+    <div class="col mb-4 col-12 col-sm-6 col-md-8 col-lg-9">
+      <!-- Partie tableau des actions -->
+      <div class="rounded border border-3">
+        <br>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- <form action="{% url 'game:attribute' player.id %}" method="post">
     {% csrf_token %}
     <fieldset>
         <legend><h1>{{ player.user.username }} : {{ player.get_total_point }}</h1></legend>
@@ -20,5 +49,5 @@
   <form action="{% url 'game:delete' player.id %}" method="post">
     {% csrf_token %}
     <input type="submit" value="Delete Player">
-  </form>
+  </form> -->
 {% endblock %}
