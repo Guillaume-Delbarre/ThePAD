@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Player(models.Model):
     photo = models.ImageField(upload_to='photo_de_profile/', null=True, blank=True)
-    description = models.CharField(max_length=200, null=True, blank=True)
+    description = models.CharField(max_length=50, null=True, blank=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):

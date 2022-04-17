@@ -24,7 +24,6 @@ def logout_user(request) :
 
 def register_user(request) :
     if request.method == "POST" :
-        print(request.POST)
         register_form = RegisterUserForm(request.POST)
         player_form = PlayerForm(request.POST, request.FILES)
         if all((register_form.is_valid(), player_form.is_valid())):
