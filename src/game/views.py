@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views import generic
 from django.db.models import Count
+from participants.forms import ModifyUserForm
 from .forms import PlayerForm, ActionForm
 from .models import Action, Player
 
@@ -24,11 +25,11 @@ class PointView(generic.DetailView) :
 
 def detail(request, player_id) :
     player = get_object_or_404(Player, pk=player_id)
-    modify = False
-    if request.method == "GET" :
-        if 'modify' in request.GET :
-            modify = True
-    return render(request, 'game/detail.html', {'player' : player, 'modify' : modify})
+
+    register_form = ModifyUserForm(instance= player.user)
+    player_form = PlayerForm(instance=player)
+
+    return render(request, 'game/detail.html', {'player' : player, 'register_form': register_form, 'player_form': player_form})
 
 
 def attribute(request, player_id):
