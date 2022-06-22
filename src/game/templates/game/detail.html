@@ -3,11 +3,17 @@
 {% block content %}
   <legend><h1>{{ player.user.username }} : {{ player.get_total_point }}</h1></legend>
   <div class="row">
-    <div class="col mb-4 col-12 col-sm-6 col-md-4 col-lg-3">
+    <div class="col mb-4 col-sm-12 col-md-6 col-lg-3">
       <!-- Partie paramètre du joueur -->
       <div class="rounded border border-3 align-middle">
         {% if player.photo %}
           <img class="img-fluid" src="{{ player.photo.url }}" style="width: 100%; max-width: 300px;">
+        {% endif %}
+
+        {% if player.description %}
+        <div>
+          {{player.description}}
+        </div>
         {% endif %}
 
         {% if player.user.id == user.id %}
@@ -18,18 +24,26 @@
         {% endif %}
       </div>
     </div>
-    <div class="col mb-4 col-12 col-sm-6 col-md-8 col-lg-9">
+    <div class="col mb-4 col-sm-12 col-md-6 col-lg-3">
       <!-- Partie tableau des actions -->
-      <div class="rounded border border-3">
-        <br>
-        <form action="" method="POST" enctype="multipart/form-data">
-          {% csrf_token %}
-            {{ register_form }}
-            <br/>
-            {{ player_form }}
-            <input type="submit" value="Register" class="btn btn-primary">
-        </form>
-      </div>
+      
+      <table class="table">
+        <thead>
+            <th scope="col">Point</th>
+            <th scope="col">Date</th>
+            <th scope="col">description</th>
+        </thead>
+        <tbody>
+          {% for action in player.action_set.all %}
+            <tr>
+              <th scope="row">{{action.point}}</th>
+              <th>{{action.act_date}}</th>
+              <th>{{action.description}}</th>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
     </div>
   </div>
   
@@ -50,7 +64,7 @@
             <div>
               <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapsepwd" aria-expanded="false" aria-controls="collapsepwd">Changer le mot de passe</button>
               <div class="collapse" id="collapsepwd">
-                  Demande à Guillaume pour te changer ton mot de passe
+                  Demande à Guillaume pour te changer ton mot de passe :)
               </div>
             </div>
             <br/>
