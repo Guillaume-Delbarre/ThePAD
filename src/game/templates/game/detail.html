@@ -3,7 +3,7 @@
 {% block content %}
   <legend><h1>{{ player.user.username }} : {{ player.get_total_point }}</h1></legend>
   <div class="row">
-    <div class="col mb-4 col-sm-12 col-md-6 col-lg-3">
+    <div class="col col-12 col-sm-12 col-md-6 col-lg-3">
       <!-- Partie paramètre du joueur -->
       <div class="rounded border border-3 align-middle">
         {% if player.photo %}
@@ -24,21 +24,23 @@
         {% endif %}
       </div>
     </div>
-    <div class="col mb-4 col-sm-12 col-md-6 col-lg-3">
+    <div class="col col-12 col-sm-12 col-md-6 col-lg-9">
       <!-- Partie tableau des actions -->
       
       <table class="table">
         <thead>
-            <th scope="col">Point</th>
-            <th scope="col">Date</th>
-            <th scope="col">description</th>
+            <tr>
+              <th scope="col">Point</th>
+              <th scope="col">Date</th>
+              <th scope="col">description</th>
+            </tr>
         </thead>
         <tbody>
           {% for action in player.action_set.all %}
             <tr>
               <th scope="row">{{action.point}}</th>
-              <th>{{action.act_date}}</th>
-              <th>{{action.description}}</th>
+              <td>{{action.act_date}}</td>
+              <td>{{action.description}}</td>
             </tr>
           {% endfor %}
         </tbody>
