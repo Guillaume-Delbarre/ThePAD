@@ -26,7 +26,7 @@ def detail(request, player_id) :
     register_form = ModifyUserForm(instance= player.user)
     player_form = PlayerForm(instance=player)
 
-    return render(request, 'game/detail.html', {'player' : player, 'register_form': register_form, 'player_form': player_form})
+    return render(request, 'game/detail.html', {'player' : player, 'register_form': register_form, 'player_form': player_form, 'player_json' : player.getJSON()})
 
 def delete(request, player_id) :
     if request.user.is_authenticated :

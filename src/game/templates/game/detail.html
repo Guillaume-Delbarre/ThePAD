@@ -48,6 +48,11 @@
 
     </div>
   </div>
+
+  <!-- Graphique -->
+  <div> 
+    <div id="individual_chart"></div>
+  </div>
   
 
   <!-- Modal -->
@@ -83,4 +88,44 @@
     </div>
   </div>
 
+
+  <!-- JS Graphique -->
+  <script src="https://www.gstatic.com/charts/loader.js"></script>
+  <script>
+    google.charts.load('current', {packages: ['corechart', 'line']});
+    google.charts.setOnLoadCallback(drawChart);
+
+    var playerdata = JSON.parse("{{player_json|escapejs}}");
+
+    function drawChart() {
+      var data = new google.visualization.DataTable();
+      data.addColumn('date', 'Date');
+      data.addColumn('number', 'Points');
+
+      for (var action in playerdata["actions"]){
+        data.addRow([new Date(playerdata["actions"][action].date_action), playerdata["actions"][action].tot_score - playerdata["actions"][action].score]);
+        data.addRow([new Date(playerdata["actions"][action].date_action), playerdata["actions"][action].tot_score]);
+      }
+
+      
+
+      var options = {
+        hAxis: {
+          title: 'Moment de la soirée',
+          minValue: new Date(playerdata["creation_date"])
+        },
+        vAxis: {
+          title: 'Score'
+        },
+        legend: 'none',
+        lineWidth: 5,
+        colors: ["#e72433"]
+      };
+
+      var chart = new google.visualization.LineChart(document.getElementById('individual_chart'));
+
+      chart.draw(data, options);
+    }
+
+  </script>
 {% endblock %}
