@@ -105,11 +105,15 @@
         data.addRow([new Date(playerdata["actions"][action].date_action), playerdata["actions"][action].tot_score - playerdata["actions"][action].score]);
         data.addRow([new Date(playerdata["actions"][action].date_action), playerdata["actions"][action].tot_score]);
       }
+      
+      // Ajout d'une dernière ligne qui correspond au score actuel au moment actuel
+      data.addRow([new Date(Date.now()), playerdata["actions"][playerdata["actions"].length - 1].tot_score])
 
       var options = {
         hAxis: {
           title: 'Moment de la soirée',
-          minValue: new Date(playerdata["creation_date"])
+          minValue: new Date(playerdata["creation_date"]),
+          maxValue: new Date(Date.now())
         },
         vAxis: {
           title: 'Score'
