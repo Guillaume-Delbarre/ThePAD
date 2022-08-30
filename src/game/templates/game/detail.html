@@ -15,14 +15,13 @@
           {{player.description}}
         </div>
         {% endif %}
-
-        {% if player.user.id == user.id %}
-          <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modifyModal">
-            Modifier les informations
-          </button>
-        {% endif %}
       </div>
+      {% if player.user.id == user.id %}
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modifyModal">
+          Modifier les informations
+        </button>
+      {% endif %}
     </div>
     <div class="col col-12 col-sm-12 col-md-6 col-lg-9">
       <!-- Partie tableau des actions -->
@@ -106,8 +105,6 @@
         data.addRow([new Date(playerdata["actions"][action].date_action), playerdata["actions"][action].tot_score - playerdata["actions"][action].score]);
         data.addRow([new Date(playerdata["actions"][action].date_action), playerdata["actions"][action].tot_score]);
       }
-
-      
 
       var options = {
         hAxis: {

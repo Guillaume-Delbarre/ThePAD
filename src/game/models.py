@@ -39,7 +39,7 @@ class Player(models.Model):
 class Action(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     point = models.IntegerField()
-    act_date = models.DateTimeField('action date', default=timezone.now())
+    act_date = models.DateTimeField('action date', default=timezone.now)
     description = models.TextField(null= True)
 
     def __str__(self):
