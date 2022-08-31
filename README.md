@@ -9,14 +9,14 @@ This project is also a way to discover django following the tutorial : [django t
 
 
 To install all the required packages you have to create a virtual environnement
-'''
+```
 py -m venv ./venv
-'''
+```
 Then you have to activate the venv
-'''
+```
 ./venv/Script/activate
-'''
+```
 And lastly you have to install all the packages listed in the file requirement.txt
-'''
+```
 pip install -r .\requirement.txt
-'''
+```
