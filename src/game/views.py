@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views import generic
 from django.db.models import Count
 from participants.forms import ModifyUserForm
+from django.contrib.auth.models import User
 from .forms import PlayerForm, ActionForm
 from .models import Action, Player
 
@@ -26,13 +27,14 @@ def detail(request, player_id) :
     register_form = ModifyUserForm(instance= player.user)
     player_form = PlayerForm(instance=player)
 
-    return render(request, 'game/detail.html', {'player' : player, 'register_form': register_form, 'player_form': player_form})
+    return render(request, 'game/detail.html', {'player' : player, 'register_form': register_form, 'player_form': player_form, 'player_json' : player.getJSON()})
 
 def delete(request, player_id) :
     if request.user.is_authenticated :
-        if request.user.id == player_id :
-            player = get_object_or_404(Player, pk=player_id)
-            player.delete()
+        player = get_object_or_404(Player, pk=player_id)
+        if request.user.id == player.user.id :
+            user = get_object_or_404(User, pk=player.user.id)
+            user.delete()
             return HttpResponseRedirect(reverse('game:index'))
         else :
             messages.error(request, "Tu ne peux pas supprimer un autre joueur que toi petit malin")
