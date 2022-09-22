@@ -2,24 +2,15 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.contrib import messages
-from django.views import generic
-from django.db.models import Count
+from django.db.models import Sum
 from participants.forms import ModifyUserForm
 from django.contrib.auth.models import User
 from .forms import PlayerForm, ActionForm
 from .models import Action, Player
 
-
-class IndexView(generic.ListView) :
-    template_name = 'game/index.html'
-    context_object_name = 'player_list'
-
-    def get_queryset(self) :
-        return Player.objects.annotate(count=Count('action__point')).order_by('-count')
-
-class DetailView(generic.DetailView) :
-    model = Player
-    template_name = 'game/detail.html'
+def index(request) :
+    player_list = Player.objects.annotate(total_points=Sum('action__point')).order_by('-total_points')
+    return render(request, 'game/index.html', {'player_list' : player_list})
 
 def detail(request, player_id) :
     player = get_object_or_404(Player, pk=player_id)
