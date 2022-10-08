@@ -55,6 +55,10 @@ def get_proper_JSON_from_player_list(player_list) :
                 tableau_score[index] = val
         di = dict(zip(names, action[1:]))
         di["Date"] = action[0]
+        if len(player_list_dict["actions"]) >= 1 :
+            last = player_list_dict["actions"][-1].copy()
+            last["Date"] = action[0]
+            player_list_dict["actions"].append(last)
         player_list_dict["actions"].append(di)
         
     print(player_list_dict)
