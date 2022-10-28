@@ -21,7 +21,6 @@ def json_serial(obj):
 def index(request) :
     player_list = Player.objects.annotate(total_points=Sum('action__point')).order_by('-total_points')
     json_player_list = get_proper_JSON_from_player_list(player_list)
-    print(json_player_list)
     return render(request, 'game/index.html', {'player_list' : player_list, 'json_player_list' : json_player_list})
 
 def get_proper_JSON_from_player_list(player_list) :
@@ -60,8 +59,6 @@ def get_proper_JSON_from_player_list(player_list) :
             last["Date"] = action[0]
             player_list_dict["actions"].append(last)
         player_list_dict["actions"].append(di)
-        
-    print(player_list_dict)
 
     return json.dumps(player_list_dict, default=json_serial)
 

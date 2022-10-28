@@ -20,3 +20,10 @@ And lastly you have to install all the packages listed in the file requirement.t
 ```
 pip install -r .\requirement.txt
 ```
+
+## Deploy
+
+- In *src/thePAD/settings.py* change **DEBUG** to FALSE
+- Make sure that the IP of the machine is in the list `ALLOWED_HOSTS` in settings.py
+- launch manage.py like : `python manage.py runserver 0.0.0.0:8000`
+- connect to the server with the link [http://192.168.1.24:8000](http://192.168.1.24:8000) (if the ip is 192.168.1.24)

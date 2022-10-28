@@ -6,7 +6,7 @@
     {% for player in player_list %}
       <div class="col mb-4 col-12 col-md-6 col-lg-3">
         <div class="card card-hover">
-          <div class="card-header">
+          <div class="card-header"> <!-- style="background-color: rgba(205, 11, 11, 0.719);">-->
             <h2 class="card-title">{{ player.user.username }}</h2>
           </div>
           <div class="card-body">
@@ -60,11 +60,6 @@
         var row = new Array();
         row.push(new Date(playerdata["actions"][action]["Date"]));
         for (var n in playerdata["names"]) {
-          // console.log(n);
-          // console.log(row);
-          // console.log(action);
-          // console.log(playerdata["actions"][action][playerdata['names'][n]]);
-          // console.log("avant", row);
           row.push(playerdata["actions"][action][playerdata['names'][n]]);
         }
         data.addRow(row);
