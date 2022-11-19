@@ -1,12 +1,12 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse
 from django.contrib import messages
 from django.db.models import Sum
 from participants.forms import ModifyUserForm
 from django.contrib.auth.models import User
-from .forms import PlayerForm, ActionForm
-from .models import Action, Player
+from .forms import PlayerForm, ActionForm, MiseForm
+from .models import Action, Player, Mise, MiseJoueur
 
 import json
 from datetime import date, datetime
@@ -64,11 +64,20 @@ def get_proper_JSON_from_player_list(player_list) :
 
 def detail(request, player_id) :
     player = get_object_or_404(Player, pk=player_id)
+    register_form = ModifyUserForm(request.POST or None, instance= player.user)
+    player_form = PlayerForm(request.POST or None, request.FILES or None, instance=player)
 
-    register_form = ModifyUserForm(instance= player.user)
-    player_form = PlayerForm(instance=player)
+    if all((register_form.is_valid(), player_form.is_valid())):
+        user_created = register_form.save()
+        player = player_form.save(commit=False)
+        player.user = user_created
+        player.save()
 
-    return render(request, 'game/detail.html', {'player' : player, 'register_form': register_form, 'player_form': player_form, 'player_json' : player.getJSON()})
+        messages.success(request, (f"L'utilisateurs a bien été modifié !"))
+        return redirect('game:detail', player_id)
+    else :
+        return render(request, 'game/detail.html', {'player' : player, 'register_form': register_form, 'player_form': player_form, 'player_json' : player.getJSON()})
+
 
 def delete(request, player_id) :
     if request.user.is_authenticated :
@@ -92,8 +101,23 @@ def add_action(request) :
             form.save()
             return HttpResponseRedirect('/add_action?submitted=True')
     else :
-        form = ActionForm
+        form = ActionForm()
         if 'submitted' in request.GET :
             submitted = True
         
     return render(request, 'game/add_action.html', {'form':form, 'submitted':submitted})
+
+def mise(request) :
+    mise_list = Mise.objects.all()
+    if request.method == "POST":
+        if request.user.is_authenticated :
+            nom = request.POST["miseNom"]
+            creator = get_object_or_404(Player, pk=request.user.player.id)
+
+            mise = Mise(creator=creator, nom=nom, fini=False)
+            mise.save()
+
+            messages.success(request, (f"La mise {nom} a bien été ajouté !"))
+            return redirect('game:mise')
+    else :
+        return render(request, 'game/mise.html', {'mise_list':mise_list})

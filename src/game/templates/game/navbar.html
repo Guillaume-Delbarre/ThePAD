@@ -15,6 +15,9 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'game:add_action' %}">Ajouter une Action</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'game:mise' %}">Voir les mises</a>
+            </li>
             {% if user.is_authenticated and user.player %}
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'game:detail' user.player.id %}">Mon Profil</a>

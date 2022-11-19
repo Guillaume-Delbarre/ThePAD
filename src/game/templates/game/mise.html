@@ -1,0 +1,57 @@
+{% extends 'game/base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createMiseModal">
+  Créer une mise
+</button>
+{% endif %}
+
+
+<legend><h1>lapin</h1></legend>
+
+<div class="row">
+  <div class="col col-12 col-sm-12 col-md-6 col-lg-3">
+    <!-- Affichage de toutes les Mises en cours -->
+    <ul class="list-group">
+      <!-- Boucle sur toutes les mises -->
+      {% for mise in mise_list %}
+        <li> {{ mise.nom }}</li>
+      {% endfor %}
+    </ul>      
+  </div>
+  <div class="col col-12 col-sm-12 col-md-6 col-lg-9">
+    <!-- Partie tableau des actions -->
+
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="createMiseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="createMiseModalLabel">{{ user.username }} : Création d'une mise</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="miseNom">Nom de la mise</label>
+            <input type="text" class="form-control" id="miseNom" name="miseNom" placeholder="Nom de la mise">
+          </div>
+        </div>
+
+        <br/>
+        <div class="modal-footer">
+          <input type="submit" value="Créer" class="btn btn-primary">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+        </div>
+      </form>      
+    </div>
+  </div>
+</div>
+
+{% endblock %}

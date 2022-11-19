@@ -1,6 +1,5 @@
 from django import forms
-from django.utils import timezone
-from .models import Player, Action
+from .models import Player, Action, Mise
 
 class PlayerForm(forms.ModelForm) :
     # name = forms.CharField(max_length=50, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom du joueur'}))
@@ -19,3 +18,11 @@ class ActionForm(forms.ModelForm) :
     class Meta :
         model = Action
         fields = ('player', 'point', 'description')
+
+class MiseForm(forms.ModelForm) :
+    nom = forms.CharField(max_length=50, required=True, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom de la mise'}), label="Nom de la Mise* :")
+
+    class Meta :
+        model = Mise
+        fields = ('nom',)
+    
