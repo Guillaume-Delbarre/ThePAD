@@ -178,3 +178,9 @@ def mise_delete(request, mise_id) :
 
     else :
         return render(request, 'game/mise_terminer.html', {'mise' : mise})
+
+def score(request) :
+    player_list = Player.objects.annotate(total_points=Sum('action__point')).order_by('-total_points')
+    json_player_list = get_proper_JSON_from_player_list(player_list)
+    date = datetime.now()
+    return render(request, 'game/global_view_score.html', {'json_player_list' : json_player_list, 'date' : date})

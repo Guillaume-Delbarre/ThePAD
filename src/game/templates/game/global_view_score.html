@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+
+        {% load static %}
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" type="text/css" href="{% static 'game/style.css' %}">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        {% include 'game/navbar.html' %}
+
+        <!-- Graphique -->
+        <div id="global_chart" style="height: 1000;"></div>
+        <div class="container" id="time">
+            <h1 class="text-center">{{ date|date:"H:i" }}</h1>
+        </div>
+
+        <!-- JS Graphique -->
+        <script src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+
+            google.charts.load('current', {packages: ['corechart', 'line']});
+            google.charts.setOnLoadCallback(drawChart);
+
+            var playerdata = JSON.parse("{{json_player_list|escapejs}}");
+
+            function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date');
+            for (var name in playerdata["names"]) {
+                data.addColumn('number', playerdata["names"][name]);
+            }
+
+            for (var action in playerdata["actions"]){
+                var row = new Array();
+                row.push(new Date(playerdata["actions"][action]["Date"]));
+                for (var n in playerdata["names"]) {
+                row.push(playerdata["actions"][action][playerdata['names'][n]]);
+                }
+                data.addRow(row);
+            }
+            
+            // Ajout d'une dernière ligne qui correspond au score actuel au moment actuel
+            var row = new Array();
+            row.push(new Date(Date.now()));
+            for (var n in playerdata["names"]) {
+                row.push(playerdata["actions"][playerdata["actions"].length - 1][playerdata['names'][n]])
+            }
+            data.addRow(row);
+
+            var options = {
+                hAxis: {
+                title: 'Moment de la soirée',
+                minValue: new Date(playerdata["actions"][0]["Date"]),
+                maxValue: new Date(Date.now())
+                },
+                vAxis: {
+                title: 'Score'
+                },
+                legend: {'position' : 'top'},
+                lineWidth: 5,
+                height: 500,
+            };
+
+            var chart = new google.visualization.LineChart(document.getElementById('global_chart'));
+
+            chart.draw(data, options);
+            }
+
+            // Refresh page
+            function autoRefresh() {
+                window.location = window.location.href;
+            }
+            setInterval('autoRefresh()', 60000);
+
+
+        </script>
+
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    </body>
+</html>
