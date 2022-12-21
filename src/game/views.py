@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.db.models import Sum
 from participants.forms import ModifyUserForm
 from django.contrib.auth.models import User
-from .forms import PlayerForm, ActionForm, MiseForm
+from .forms import PlayerForm, ActionForm
 from .models import Action, Player, Mise, MiseJoueur
 
 import json
@@ -108,16 +108,73 @@ def add_action(request) :
     return render(request, 'game/add_action.html', {'form':form, 'submitted':submitted})
 
 def mise(request) :
-    mise_list = Mise.objects.all()
+    mise_list = Mise.objects.all().order_by("fini", "date_creation",)
     if request.method == "POST":
         if request.user.is_authenticated :
             nom = request.POST["miseNom"]
-            creator = get_object_or_404(Player, pk=request.user.player.id)
+            if nom == None or nom == "" :
+                messages.error(request, (f"Nom non valide pour la mise"))
 
-            mise = Mise(creator=creator, nom=nom, fini=False)
-            mise.save()
+                return redirect('game:mise')
+            else :
+                creator = get_object_or_404(Player, pk=request.user.player.id)
 
-            messages.success(request, (f"La mise {nom} a bien été ajouté !"))
-            return redirect('game:mise')
+                mise = Mise(creator=creator, nom=nom, fini=False)
+                mise.save()
+
+                messages.success(request, (f"La mise {nom} a bien été ajouté !"))
+                return redirect('game:mise_detail', mise_id=mise.id)
     else :
         return render(request, 'game/mise.html', {'mise_list':mise_list})
+        
+def mise_detail(request, mise_id) :
+    mise = get_object_or_404(Mise, pk=mise_id)
+
+    if request.method == "POST":
+        if request.user.is_authenticated :
+            val = int(request.POST["miseValeur"])
+            player_id = int(request.POST["id"])
+
+            if player_id in mise.player_id_list() :
+                if val == 0 :
+                    # Suppression de la miseJoueur
+                    for miseJoueur in mise.misejoueur_set.all() :
+                        if miseJoueur.player.id == player_id :
+                            miseJoueur.delete()
+
+                            messages.success(request, (f"La mise à bien été supprimée"))
+                            return redirect('game:mise_detail', mise_id=mise_id)
+                else :
+                    # Modification de la mise
+                    for miseJoueur in mise.misejoueur_set.all() :
+                        if miseJoueur.player.id == player_id :
+                            miseJoueur.mise_score = val
+                            miseJoueur.save()
+
+                            messages.success(request, (f"La valeur à bien été changé"))
+                            return redirect('game:mise_detail', mise_id=mise_id)
+            else :
+                # Nouvelle misejoueur
+                mise_joueur = MiseJoueur(player = get_object_or_404(Player, pk=player_id), mise=mise, mise_score=val)
+                mise_joueur.save()
+
+                messages.success(request, (f"La mise a bien été créée"))
+                return redirect('game:mise_detail', mise_id=mise_id)
+    
+    return render(request, 'game/mise_detail.html', {'mise':mise})
+
+def mise_delete(request, mise_id) :
+    mise = get_object_or_404(Mise, pk=mise_id)
+
+    if request.method == "POST" and request.user.is_authenticated :
+        for miseJoueur in mise.misejoueur_set.all() :
+            if f"check{miseJoueur.id}" in request.POST :
+                miseJoueur.resultat = True
+                miseJoueur.save()
+        
+        mise.fermer_mise()
+        messages.success(request, (f"La mise a bien été fermée"))
+        return redirect('game:mise')
+
+    else :
+        return render(request, 'game/mise_terminer.html', {'mise' : mise})

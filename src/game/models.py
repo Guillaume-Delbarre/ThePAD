@@ -1,4 +1,3 @@
-from email.policy import default
 from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
@@ -53,13 +52,28 @@ class Mise(models.Model) :
     fini = models.BooleanField(default=False)
     nom = models.CharField(max_length=50)
 
+    def __str__(self) :
+        return f"{self.nom} par {self.creator}"
+
+    def user_id_list(self) :
+        return [m.player.user.id for m in self.misejoueur_set.all()]
+    
+    def player_id_list(self) :
+        return [m.player.id for m in self.misejoueur_set.all()]
+
     def mise_totale(self):
-        return sum([m.mise for m in self.misejoueur_set.all()])
+        return sum([m.mise_score for m in self.misejoueur_set.all()])
     
     def mise_totale_gagnant(self) :
-        return sum([m.mise for m in self.misejoueur_set.all() if m.resultat])
+        sum = 0
+        for m in self.misejoueur_set.all() :
+            if m.resultat :
+                sum += m.mise_score
+        return sum
 
     def fermer_mise(self) :
+        self.fini = True
+        self.save()
         for joueur in self.misejoueur_set.all() :
             joueur.fermeture_mise()
 
@@ -78,10 +92,10 @@ class MiseJoueur(models.Model) :
     
     def calcul_gain(self) :
         if self.resultat :
-            proportion = self.mise.mise_totale_gagnant / self.mise_score
-            return ceil(self.mise.mise_totale * proportion)
+            proportion = self.mise_score / self.mise.mise_totale_gagnant()
+            return ceil((self.mise.mise_totale() - self.mise.mise_totale_gagnant()) * proportion)
         else :
-            return 0
+            return -self.mise_score
 
     def fermeture_mise(self) :
         action = Action(player=self.player, point=self.calcul_gain(), description=f"Gains de la mise {self.mise.nom}")

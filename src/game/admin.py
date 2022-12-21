@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Player, Action
+from .models import Player, Action, Mise, MiseJoueur
 
 class ActionInline(admin.StackedInline) :
     model = Action
@@ -17,5 +17,26 @@ class ActionAdmin(admin.ModelAdmin):
         ('Valeurs',          {'fields' : ['point']})
     ]
 
+class MiseJoueurAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Joueur',          {'fields' : ['player']}),
+        ('Mise',            {'fields' : ['mise']}),
+        ('Valeur de la mise du joueur', {'fields' : ['mise_score']})
+    ]
+
+class MiseJoueurInline(admin.StackedInline):
+    model = MiseJoueur
+    extra = 1
+
+class MiseAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('Createur',            {'fields' : ['creator']}),
+        ('Nom',                 {'fields' : ['nom']}),
+        ('Fini ?',              {'fields' : ['fini']})
+    ]
+    inlines = [MiseJoueurInline]
+
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Action, ActionAdmin)
+admin.site.register(Mise, MiseAdmin)
+admin.site.register(MiseJoueur, MiseJoueurAdmin)

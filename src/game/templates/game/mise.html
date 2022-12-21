@@ -2,30 +2,35 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createMiseModal">
-  Créer une mise
-</button>
-{% endif %}
-
-
-<legend><h1>lapin</h1></legend>
-
-<div class="row">
-  <div class="col col-12 col-sm-12 col-md-6 col-lg-3">
-    <!-- Affichage de toutes les Mises en cours -->
-    <ul class="list-group">
-      <!-- Boucle sur toutes les mises -->
-      {% for mise in mise_list %}
-        <li> {{ mise.nom }}</li>
-      {% endfor %}
-    </ul>      
-  </div>
-  <div class="col col-12 col-sm-12 col-md-6 col-lg-9">
-    <!-- Partie tableau des actions -->
-
-  </div>
+<div class="d-inline-block">
+  <h1>Les mises</h1>
 </div>
+
+<div class="d-inline-block">
+  {% if user.is_authenticated %}
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createMiseModal">
+      Créer une mise
+    </button>
+  {% endif %}
+</div>
+
+<div class="list-group">
+  <!-- Boucle sur toutes les mises -->
+  {% for mise in mise_list %}
+    <a href="{% url 'game:mise_detail' mise.id %}" class="list-group-item list-group-item-action" id="listIem{{mise.id}}">
+      <h4 style="text-align:left;float:left;">{{ mise.nom }}</h4>
+      {% if mise.fini %}
+        <div style="text-align:right;float:right;color:darkred;"> Fini </div>
+      {% else %}
+        <div style="text-align:right;float:right;color:darkgreen"> En cours </div>
+      {% endif %}
+      <hr style="clear:both;"/>
+
+      <small>Créée par {{ mise.creator }} à {{ mise.date_creation|date:"H:i" }}</small>
+    </a>
+  {% endfor %}
+</div> 
+
 
 <!-- Modal -->
 <div class="modal fade" id="createMiseModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -40,7 +45,7 @@
         <div class="modal-body">
           <div class="form-group">
             <label for="miseNom">Nom de la mise</label>
-            <input type="text" class="form-control" id="miseNom" name="miseNom" placeholder="Nom de la mise">
+            <input type="text" class="form-control" required="required" id="miseNom" name="miseNom" placeholder="Nom de la mise">
           </div>
         </div>
 
@@ -53,5 +58,7 @@
     </div>
   </div>
 </div>
+
+
 
 {% endblock %}

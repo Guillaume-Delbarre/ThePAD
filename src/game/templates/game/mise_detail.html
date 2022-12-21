@@ -1,0 +1,85 @@
+{% extends 'game/base.html' %}
+
+{% block content %}
+
+    <!-- Entête -->
+    <h1> {{mise.nom}} - Mise totale {{mise.mise_totale}}</h1>
+    <div>
+        Créée par {{mise.creator}}
+
+        {% if mise.fini %}
+            <div style="display: inline-block;color:darkred;"> <b>Fini</b> </div>
+        {% else %}
+            <div style="display: inline-block;color:darkgreen"> <b>En cours</b> </div>
+        {% endif %}
+    </div>
+
+    <!-- Liste des mises joueurs -->
+    <div class="list-group">
+        {% for miseJoueur in mise.misejoueur_set.all %}
+            <div class="list-group-item">
+                {{miseJoueur.player}} : {{miseJoueur.mise_score}}
+                {% if mise.fini %}
+                    {% if miseJoueur.resultat %}
+                        <div style="display: inline-block;color:darkred;"> <b>Perdu</b> </div>
+                    {% else %}
+                        <div style="display: inline-block;color:darkgreen;"> <b>Gagné</b> </div>
+                    {% endif %}
+                {% else %}
+                    {% if user.is_authenticated %}
+                        {% if miseJoueur.player.id == user.player.id %}
+                        <div>
+                            <form action="" method="POST" enctype="multipart/form-data">
+                                {% csrf_token %}
+                                <input type="hidden" id="id" name="id" value={{miseJoueur.player.id}}>
+                                <small><label for="miseValeur" class="form-label">Changer la valeur de la mise</label></small>
+                                <div class="input-group">
+                                    <input type="number" class="form-control" required="required" id="miseValeur" name="miseValeur" placeholder="Valeur de la mise" value={{miseJoueur.mise_score}}>
+                                    <input type="submit" value="Valider" class="btn btn-primary">
+                                </div>
+                            </form>
+                        </div>
+                        {% endif %}
+                    {% endif %}
+                {% endif %}
+            </div>
+        {% endfor %}
+        
+        <!-- Ajout de la case si le joueur ne fait pas encore parti de la mise -->
+        {% if user.is_authenticated and not mise.fini %}
+            {% if user.id not in mise.user_id_list %}
+            <div class="list-group-item" style="background-color: rgb(192, 192, 192);">
+                Ajouter une mise
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" id="id" name="id" value={{user.player.id}}>
+                    <div class="input-group">
+                        <input type="number" class="form-control" required="required" id="miseValeur" name="miseValeur" placeholder="Valeur de la mise" value=0>
+                        <input type="submit" value="Valider" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <!-- Terminer la mise -->
+    {% if user.is_authenticated and mise.creator.user.id == user.id and not mise.fini %}
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTerminer" aria-expanded="false" aria-controls="collapseTerminer">
+                Terminer la mise
+            </button>
+
+        <div class="collapse" id="collapseTerminer">
+            Êtes-vous sûr de vouloir terminer la mise ?
+            <a href="{% url 'game:mise_delete' mise.id %}" type="button" class="btn btn-warning">Oui - Terminer la mise</a>
+            <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTerminer" aria-expanded="false" aria-controls="collapseTerminer">
+                Non - Annuler
+            </button>
+        </div>
+    {% endif %}
+
+
+
+    <a href="{% url 'game:mise' %}" type="button" class="btn btn-secondary">Retour à la liste des mises</a>
+
+{% endblock %}
