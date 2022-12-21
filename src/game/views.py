@@ -101,7 +101,10 @@ def add_action(request) :
             form.save()
             return HttpResponseRedirect('/add_action?submitted=True')
     else :
-        form = ActionForm()
+        if request.user.is_authenticated :
+            form = ActionForm(initial={'player': request.user.player.id})
+        else :
+            form = ActionForm()
         if 'submitted' in request.GET :
             submitted = True
         
