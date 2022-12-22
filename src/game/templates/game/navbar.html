@@ -26,6 +26,9 @@
             <li class="nav-item">
               <a class="nav-link active" aria-current="page" href="{% url 'game:score' %}">Graphique Global</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="{% url 'game:manoeuvre' %}">Liste des Manoeuvres</a>
+            </li>
         </ul>
         <ul class="navbar-nav d-flex">
           {% if user.is_authenticated %}

@@ -187,3 +187,6 @@ def score(request) :
     json_player_list = get_proper_JSON_from_player_list(player_list)
     date = datetime.now()
     return render(request, 'game/global_view_score.html', {'json_player_list' : json_player_list, 'date' : date})
+
+def manoeuvre(request) :
+    return render(request, 'game/manoeuvre.html')

@@ -11,5 +11,6 @@ urlpatterns = [
     path('mise', views.mise, name="mise"),
     path('mise/<int:mise_id>', views.mise_detail, name='mise_detail'),
     path('mise/delete/<int:mise_id>', views.mise_delete, name='mise_delete'),
-    path('score', views.score, name='score')
+    path('score', views.score, name='score'),
+    path('manoeuvres', views.manoeuvre, name='manoeuvre'),
 ]
