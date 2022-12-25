@@ -30,66 +30,7 @@
     {% endfor %}
   </div>
 
-  <!-- Graphique -->
-  <div class="container"> 
-    <div id="global_chart"></div>
-  </div>
-
   {% else %}
       <h3>No player are available.</h3>
   {% endif %}
-
-
-  <!-- JS Graphique -->
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-  <script>
-
-    google.charts.load('current', {packages: ['corechart', 'line']});
-    google.charts.setOnLoadCallback(drawChart);
-
-    var playerdata = JSON.parse("{{json_player_list|escapejs}}");
-
-    function drawChart() {
-      var data = new google.visualization.DataTable();
-      data.addColumn('date', 'Date');
-      for (var name in playerdata["names"]) {
-        data.addColumn('number', playerdata["names"][name]);
-      }
-
-      for (var action in playerdata["actions"]){
-        var row = new Array();
-        row.push(new Date(playerdata["actions"][action]["Date"]));
-        for (var n in playerdata["names"]) {
-          row.push(playerdata["actions"][action][playerdata['names'][n]]);
-        }
-        data.addRow(row);
-      }
-      
-      // Ajout d'une dernière ligne qui correspond au score actuel au moment actuel
-      var row = new Array();
-      row.push(new Date(Date.now()));
-      for (var n in playerdata["names"]) {
-        row.push(playerdata["actions"][playerdata["actions"].length - 1][playerdata['names'][n]])
-      }
-      data.addRow(row);
-
-      var options = {
-        hAxis: {
-          title: 'Moment de la soirée',
-          minValue: new Date(playerdata["actions"][0]["Date"]),
-          maxValue: new Date(Date.now())
-        },
-        vAxis: {
-          title: 'Score'
-        },
-        legend: {'position' : 'top'},
-        lineWidth: 5,
-      };
-
-      var chart = new google.visualization.LineChart(document.getElementById('global_chart'));
-
-      chart.draw(data, options);
-    }
-
-  </script>
 {% endblock %}

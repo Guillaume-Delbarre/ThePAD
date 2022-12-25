@@ -1,0 +1,41 @@
+{% extends 'game/base.html' %}
+
+{% block content %}
+
+    <ul class="list-group">
+    {% for pari in liste_pari %}
+        <li class="list-group-item">
+            <b>{{pari}}</b>
+            {% if pari.reussi == 0 %}
+                <div style="text-align: left;float: right;">En cours</div>
+            {% elif pari.reussi == 2 %}
+                <div style="text-align:right;float:right;color:darkred;"> Non Réussi </div>
+            {% elif pari.reussi == 1 %}
+                <div style="text-align:right;float:right;color:darkgreen"> Réussi </div>
+            {% endif %}
+            {% if pari.parijoueur_set.all %}
+                <ul class="list-group">
+                {% for parijoueur in pari.parijoueur_set.all %}
+                    <li class="list-group-item">
+                        {{parijoueur.player}} : {{parijoueur.mise}}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% if user.is_superuser and pari.reussi == 0 %}
+            <div>
+                <form action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" id="id" name="id" value={{pari.id}}>
+                    <div class="input-group">
+                        <input type="number" class="form-control" required="required" id="resultat" name="resultat" placeholder="1 - Réussi / 2 - Echoué" value=0>
+                        <input type="submit" value="Valider" class="btn btn-primary">
+                    </div>
+                </form>
+            </div>
+            {% endif %}
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

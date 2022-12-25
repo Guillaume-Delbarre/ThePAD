@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import User
 
+from decimal import *
 from json import dumps
 from datetime import date, datetime
 from math import ceil
@@ -11,6 +12,8 @@ def json_serial(obj):
 
     if isinstance(obj, (datetime, date)):
         return obj.isoformat()
+    if isinstance(obj, Decimal) :
+        return str(obj)
     raise TypeError ("Type %s not serializable" % type(obj))
 
 
@@ -39,7 +42,7 @@ class Player(models.Model):
     
 class Action(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
-    point = models.IntegerField()
+    point = models.DecimalField(max_digits=12, decimal_places=2)
     act_date = models.DateTimeField('action date', default=timezone.now)
     description = models.TextField(null= True)
 
@@ -100,4 +103,34 @@ class MiseJoueur(models.Model) :
     def fermeture_mise(self) :
         action = Action(player=self.player, point=self.calcul_gain(), description=f"Gains de la mise {self.mise.nom}")
         action.save()
-        
+
+class Pari(models.Model) :
+    intitule = models.CharField(max_length=200)
+    cote = models.FloatField()
+    reussi = models.IntegerField(default=0) #0 pas de réponse / 1 Réussi / 2 Raté
+
+    def __str__(self) :
+        return self.intitule + f" ({self.cote})";
+    
+    def fini(self) :
+        return self.reussi != 0
+
+    def termine_pari(self) :
+        for pariJoueur in self.parijoueur_set.all() :
+            pariJoueur.ajout_score()
+
+class PariJoueur(models.Model) :
+    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    pari = models.ForeignKey(Pari, on_delete=models.CASCADE)
+    mise = models.IntegerField()
+
+    def fini(self) :
+        return self.pari.fini()
+
+    def gain_potentiel(self) :
+        return self.pari.cote * self.mise
+
+    def ajout_score(self) :
+        if self.pari.reussi == 1 :
+            action = Action(player=self.player, point=self.gain_potentiel(), description=f"Gains du pari {str(self.pari)}")
+            action.save()

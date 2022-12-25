@@ -13,4 +13,5 @@ urlpatterns = [
     path('mise/delete/<int:mise_id>', views.mise_delete, name='mise_delete'),
     path('score', views.score, name='score'),
     path('manoeuvres', views.manoeuvre, name='manoeuvre'),
+    path('pari', views.pari, name="pari"),
 ]

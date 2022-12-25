@@ -6,7 +6,7 @@ from django.db.models import Sum
 from participants.forms import ModifyUserForm
 from django.contrib.auth.models import User
 from .forms import PlayerForm, ActionForm
-from .models import Action, Player, Mise, MiseJoueur
+from .models import Action, Player, Mise, MiseJoueur, Pari
 
 import json
 from datetime import date, datetime
@@ -186,7 +186,19 @@ def score(request) :
     player_list = Player.objects.annotate(total_points=Sum('action__point')).order_by('-total_points')
     json_player_list = get_proper_JSON_from_player_list(player_list)
     date = datetime.now()
-    return render(request, 'game/global_view_score.html', {'json_player_list' : json_player_list, 'date' : date})
+    return render(request, 'game/global_view_score.html', {'json_player_list' : json_player_list, 'date' : date, 'player_list':player_list})
 
 def manoeuvre(request) :
     return render(request, 'game/manoeuvre.html')
+
+def pari(request) :
+    if request.method == 'POST' and request.user.is_superuser :
+        pari_id = int(request.POST['id'])
+        pari = get_object_or_404(Pari, pk=pari_id)
+        res = int(request.POST['resultat'])
+        if res in (1, 2) :
+            pari.reussi = res
+            pari.save()
+            pari.termine_pari()
+    list_pari = Pari.objects.order_by('reussi')
+    return render(request, 'game/pari.html', {'liste_pari' : list_pari})

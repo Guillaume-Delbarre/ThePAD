@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Player, Action, Mise, MiseJoueur
+from .models import Player, Action, Mise, MiseJoueur, Pari, PariJoueur
 
 class ActionInline(admin.StackedInline) :
     model = Action
@@ -17,7 +17,7 @@ class ActionAdmin(admin.ModelAdmin):
         ('Valeurs',          {'fields' : ['point']})
     ]
 
-class MiseJoueurAdmin(admin.ModelAdmin):
+class MiseJoueurAdmin(admin.ModelAdmin) :
     fieldsets = [
         ('Joueur',          {'fields' : ['player']}),
         ('Mise',            {'fields' : ['mise']}),
@@ -36,7 +36,28 @@ class MiseAdmin(admin.ModelAdmin):
     ]
     inlines = [MiseJoueurInline]
 
+class PariJoueurAdmin(admin.ModelAdmin) :
+    fieldsets = [
+        ('Joueur',          {'fields' : ['player']}),
+        ('Mise',            {'fields' : ['mise']}),
+        ('Pari',            {'fields' : ['pari']})
+    ]
+
+class PariJoueurInline(admin.StackedInline):
+        model = PariJoueur
+        extra = 1
+
+class PariAdmin(admin.ModelAdmin) :
+    fieldsets = [
+        ('Intitulé',        {'fields' : ['intitule']}),
+        ('Cote',            {'fields' : ['cote']}),
+        ('Reussi',          {'fields' : ['reussi']})
+    ]
+    inlines = [PariJoueurInline]
+
 admin.site.register(Player, PlayerAdmin)
 admin.site.register(Action, ActionAdmin)
 admin.site.register(Mise, MiseAdmin)
 admin.site.register(MiseJoueur, MiseJoueurAdmin)
+admin.site.register(Pari, PariAdmin)
+admin.site.register(PariJoueur, PariJoueurAdmin)
