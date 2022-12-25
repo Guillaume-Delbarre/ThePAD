@@ -86,7 +86,7 @@ class Mise(models.Model) :
 class MiseJoueur(models.Model) :
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     mise = models.ForeignKey(Mise, on_delete=models.CASCADE)
-    mise_score = models.PositiveIntegerField()
+    mise_score = models.DecimalField(max_digits=12, decimal_places=2)
     resultat = models.BooleanField(default=False)
     mise_date = models.DateTimeField('date', default=timezone.now)
 
@@ -106,7 +106,7 @@ class MiseJoueur(models.Model) :
 
 class Pari(models.Model) :
     intitule = models.CharField(max_length=200)
-    cote = models.FloatField()
+    cote = models.DecimalField(max_digits=12, decimal_places=2)
     reussi = models.IntegerField(default=0) #0 pas de réponse / 1 Réussi / 2 Raté
 
     def __str__(self) :

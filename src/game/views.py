@@ -9,6 +9,7 @@ from .forms import PlayerForm, ActionForm
 from .models import Action, Player, Mise, MiseJoueur, Pari
 
 import json
+from decimal import *
 from datetime import date, datetime
 
 def json_serial(obj):
@@ -79,19 +80,19 @@ def detail(request, player_id) :
         return render(request, 'game/detail.html', {'player' : player, 'register_form': register_form, 'player_form': player_form, 'player_json' : player.getJSON()})
 
 
-def delete(request, player_id) :
-    if request.user.is_authenticated :
-        player = get_object_or_404(Player, pk=player_id)
-        if request.user.id == player.user.id :
-            user = get_object_or_404(User, pk=player.user.id)
-            user.delete()
-            return HttpResponseRedirect(reverse('game:index'))
-        else :
-            messages.error(request, "Tu ne peux pas supprimer un autre joueur que toi petit malin")
-            return HttpResponseRedirect(reverse('game:index'))
-    else :
-        messages.error(request, "Il faut être connecté pour pouvoir supprimer un joueur")
-        return HttpResponseRedirect(reverse('game:index'))
+# def delete(request, player_id) :
+#     if request.user.is_authenticated :
+#         player = get_object_or_404(Player, pk=player_id)
+#         if request.user.id == player.user.id :
+#             user = get_object_or_404(User, pk=player.user.id)
+#             user.delete()
+#             return HttpResponseRedirect(reverse('game:index'))
+#         else :
+#             messages.error(request, "Tu ne peux pas supprimer un autre joueur que toi petit malin")
+#             return HttpResponseRedirect(reverse('game:index'))
+#     else :
+#         messages.error(request, "Il faut être connecté pour pouvoir supprimer un joueur")
+#         return HttpResponseRedirect(reverse('game:index'))
 
 def add_action(request) :
     submitted = False
@@ -99,25 +100,22 @@ def add_action(request) :
         form = ActionForm(request.POST, request.FILES)
         if form.is_valid() :
             form.save()
-            return HttpResponseRedirect('/add_action?submitted=True')
+            messages.success(request, ("L'action a bien été ajoutée"))
+            return redirect('game:add_action')
     else :
         if request.user.is_authenticated :
             form = ActionForm(initial={'player': request.user.player.id})
         else :
             form = ActionForm()
-        if 'submitted' in request.GET :
-            submitted = True
-        
-    return render(request, 'game/add_action.html', {'form':form, 'submitted':submitted})
+        return render(request, 'game/add_action.html', {'form':form})
 
 def mise(request) :
-    mise_list = Mise.objects.all().order_by("fini", "date_creation",)
+    mise_list = Mise.objects.all().order_by("fini", "-date_creation",)
     if request.method == "POST":
         if request.user.is_authenticated :
             nom = request.POST["miseNom"]
-            if nom == None or nom == "" :
+            if nom == None or nom.isspace() :
                 messages.error(request, (f"Nom non valide pour la mise"))
-
                 return redirect('game:mise')
             else :
                 creator = get_object_or_404(Player, pk=request.user.player.id)
@@ -135,8 +133,12 @@ def mise_detail(request, mise_id) :
 
     if request.method == "POST":
         if request.user.is_authenticated :
-            val = int(request.POST["miseValeur"])
+            val = Decimal(request.POST["miseValeur"])
             player_id = int(request.POST["id"])
+
+            if val < 0 :
+                messages.error(request, (f"La valeur ne peut pas être négative"))
+                return redirect('game:mise_detail', mise_id=mise_id)
 
             if player_id in mise.player_id_list() :
                 if val == 0 :

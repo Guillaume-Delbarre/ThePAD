@@ -7,11 +7,6 @@
         <h1>Ajouter une action</h1>
         <br/>
 
-        {% if submitted %}
-            L'action à bien été ajouté
-
-        {% else %}
-
         <form action="" method=POST enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -20,8 +15,6 @@
             <input type="submit" value="Envoyer" class="btn btn-primary">
 
         </form>
-
-        {% endif %}
     
     {% else %}
         <h1>Vous devez être connecté pour ajouter une action</h1>
