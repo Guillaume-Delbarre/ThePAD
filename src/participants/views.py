@@ -13,7 +13,7 @@ def login_user(request) :
             login(request, user)
             return redirect('game:index')
         else :
-            messages.success(request, ('Une erreur à eue lieu pour la connexion, réessaye :)'))
+            messages.error(request, ('Une erreur à eue lieu pour la connexion, réessaye :)'))
             return redirect('login')
     else :
         return render(request, 'authenticate/login.html', {})

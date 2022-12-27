@@ -12,8 +12,8 @@ class PlayerForm(forms.ModelForm) :
 
 class ActionForm(forms.ModelForm) :
     player = forms.ModelChoiceField(queryset=Player.objects.all().order_by('user__username'), empty_label="Sélectionner un joueur", label='Joueur* :', widget=forms.Select(attrs={'class': 'form-select'}))
-    point = forms.FloatField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre de Points'}), label='Point* :')
-    description = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '5', 'placeholder': 'Précision sur l\'action'}), label='Description :')
+    point = forms.DecimalField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre de Points'}), label='Point* :', decimal_places=2, max_digits=12)
+    description = forms.CharField(required=False, widget=forms.Textarea(attrs={'class': 'form-control', 'rows': '3', 'placeholder': 'Précision sur l\'action'}), label='Description :')
     
     class Meta :
         model = Action

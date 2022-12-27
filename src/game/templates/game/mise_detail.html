@@ -21,9 +21,9 @@
                 {{miseJoueur.player}} : {{miseJoueur.mise_score}}
                 {% if mise.fini %}
                     {% if miseJoueur.resultat %}
-                        <div style="display: inline-block;color:darkred;"> <b>Perdu</b> </div>
-                    {% else %}
                         <div style="display: inline-block;color:darkgreen;"> <b>Gagné</b> </div>
+                    {% else %}
+                        <div style="display: inline-block;color:darkred;"> <b>Perdu</b> </div>
                     {% endif %}
                 {% else %}
                     {% if user.is_authenticated %}

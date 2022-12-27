@@ -95,7 +95,6 @@ def detail(request, player_id) :
 #         return HttpResponseRedirect(reverse('game:index'))
 
 def add_action(request) :
-    submitted = False
     if request.method == "POST" :
         form = ActionForm(request.POST, request.FILES)
         if form.is_valid() :
