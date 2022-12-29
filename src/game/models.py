@@ -96,7 +96,7 @@ class MiseJoueur(models.Model) :
     def calcul_gain(self) :
         if self.resultat :
             proportion = self.mise_score / self.mise.mise_totale_gagnant()
-            return ceil((self.mise.mise_totale() - self.mise.mise_totale_gagnant()) * proportion)
+            return Decimal((self.mise.mise_totale() - self.mise.mise_totale_gagnant()) * proportion)
         else :
             return -self.mise_score
 

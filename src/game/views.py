@@ -49,9 +49,10 @@ def get_proper_JSON_from_player_list(player_list) :
 
     for action in tableau_final :
         for index, val in enumerate(action[1:]) :
+            print(val, type(val))
             if val == None :
                 action[index + 1] = tableau_score[index]
-            elif isinstance(val, int) :
+            elif isinstance(val, str) :
                 tableau_score[index] = val
         di = dict(zip(names, action[1:]))
         di["Date"] = action[0]
@@ -101,6 +102,9 @@ def add_action(request) :
             form.save()
             messages.success(request, ("L'action a bien été ajoutée"))
             return redirect('game:add_action')
+        else :
+            messages.error(request, ("La valeur n'est pas valide"))
+            return render(request, 'game/add_action.html', {'form':form})
     else :
         if request.user.is_authenticated :
             form = ActionForm(initial={'player': request.user.player.id})
