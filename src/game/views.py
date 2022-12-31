@@ -49,7 +49,6 @@ def get_proper_JSON_from_player_list(player_list) :
 
     for action in tableau_final :
         for index, val in enumerate(action[1:]) :
-            print(val, type(val))
             if val == None :
                 action[index + 1] = tableau_score[index]
             elif isinstance(val, str) :

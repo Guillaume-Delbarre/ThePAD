@@ -14,7 +14,8 @@ class ActionAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,               {'fields' : ['player']}),
         ('Information date', {'fields' : ['act_date']}),
-        ('Valeurs',          {'fields' : ['point']})
+        ('Valeurs',          {'fields' : ['point']}),
+        ('Description',      {'fields' : ['description']})
     ]
 
 class MiseJoueurAdmin(admin.ModelAdmin) :
