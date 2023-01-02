@@ -14,12 +14,12 @@
 
         <!-- Heure -->
         <div class="container text-center">
-            <h1>{{ date|date:"H:i" }}</h1>
-            <marquee style="font-size: large;">
+            <!-- <h1>{{ date|date:"H:i" }}</h1> -->
+            <div style="font-size: large;">
             {% for player in player_list %}
                 {{player}} : {{player.get_total_point}} &emsp; &emsp; &emsp;
             {% endfor %}
-            </marquee>
+            </div>
         </div>
 
         <!-- JS Graphique -->
@@ -49,7 +49,9 @@
             
             // Ajout d'une dernière ligne qui correspond au score actuel au moment actuel
             var row = new Array();
-            row.push(new Date(Date.now()));
+            var fin = new Date('2023-01-01T03:20:00');
+            //row.push(new Date(Date.now()));
+            row.push(fin);
             for (var n in playerdata["names"]) {
                 row.push(+(playerdata["actions"][playerdata["actions"].length - 1][playerdata['names'][n]]))
             }
@@ -59,7 +61,8 @@
                 hAxis: {
                 title: 'Moment de la soirée',
                 minValue: new Date(playerdata["actions"][0]["Date"]),
-                maxValue: new Date(Date.now())
+                //maxValue: new Date(Date.now())
+                maxValue: fin
                 },
                 vAxis: {
                 title: 'Score'
